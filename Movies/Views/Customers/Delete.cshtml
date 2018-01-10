@@ -1,0 +1,40 @@
+﻿@model Movies.Models.Customer
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Ta bort</h2>
+
+<h3>Bekräfta borttag</h3>
+<div>
+    <h4>Kund</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.firstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.firstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.lastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.lastName)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Ta bort" class="btn btn-default" /> |
+            @Html.ActionLink("Tillbaka", "Index")
+        </div>
+    }
+</div>

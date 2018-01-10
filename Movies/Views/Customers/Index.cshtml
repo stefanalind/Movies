@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Movies.Models.Customer>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Kunder</h2>
+
+<p>
+    @Html.ActionLink("Lägg till", "Create")
+</p>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.lastName).ToString(), "Index", new { sortOrder = ViewBag.LastNameSort })
+        </th>
+        <th>
+            @Html.ActionLink(HttpUtility.HtmlDecode(@Html.DisplayNameFor(model => model.firstName).ToString()), "Index", new { sortOrder = ViewBag.FirstNameSort })
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.lastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.firstName)
+        </td>
+        <td>
+            @Html.ActionLink("Ändra", "Edit", new { id=item.customerId }) |
+            @Html.ActionLink("Detaljer", "Details", new { id=item.customerId }) |
+            @Html.ActionLink("Ta bort", "Delete", new { id=item.customerId }) |
+            @Html.ActionLink("Hyr film", "Index", "CustomerMovies", new { id = item.customerId }, null)
+        </td>
+    </tr>
+}
+
+</table>

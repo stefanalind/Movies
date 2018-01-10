@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Movies.Models.Movie>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Filmer</h2>
+
+<p>
+    @Html.ActionLink("Lägg till", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.genre).ToString(), "Index", new { sortOrder = ViewBag.GenreSort })
+        </th>
+        <th>
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.title).ToString(), "Index", new { sortOrder = ViewBag.TitleSort })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.length)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.numberOf) (Antal för uthyrning)
+            
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.genre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.length)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.numberOf)
+        </td>
+        <td>
+            @Html.ActionLink("Ändra", "Edit", new { id=item.movieId }) |
+            @Html.ActionLink("Detaljer", "Details", new { id=item.movieId }) |
+            @Html.ActionLink("Ta bort", "Delete", new { id=item.movieId })
+        </td>
+    </tr>
+}
+
+</table>

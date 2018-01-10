@@ -1,0 +1,93 @@
+﻿@model Movies.Models.CustomerMoviesViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Hyra film</h2>
+
+<div>
+    @Html.ActionLink("Tillbaka", "Index", "Customers")
+</div>
+
+<div>
+    <h4>Kund - @Model.customer.firstName @Model.customer.lastName</h4>
+</div>
+
+<div style="float:left; width:50%; background-color:lightyellow">
+
+    <h4>Hyrda filmer</h4>
+
+    <table class="table" style="">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.moviesRented[0].title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.moviesRented[0].genre)
+            </th>
+            <th></th>
+
+        </tr>
+
+        @foreach (var item in Model.moviesRented)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.genre)
+                </td>
+                <td>
+                    @using (Html.BeginForm(new {customerId = @Model.customer.customerId, movieId = item.movieId }))
+                    {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" value="Återlämna" class="btn btn-default" />
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+<div style="float:right; width:50%;  background-color:lightcyan">
+
+    <h4>Tillgängliga filmer</h4>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.moviesAvailable[0].title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.moviesAvailable[0].genre)
+            </th>
+            <th></th>
+
+        </tr>
+
+        @foreach (var item in Model.moviesAvailable)
+            {
+            <tr style="height:auto">
+                <td>
+                    @Html.DisplayFor(modelItem => item.title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.genre)
+                </td>
+                <td>
+                    @using (Html.BeginForm(new {customerId = @Model.customer.customerId, movieId = item.movieId }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="submit" value="Hyr" class="btn btn-default" />
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+
+
+
