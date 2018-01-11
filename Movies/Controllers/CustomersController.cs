@@ -17,8 +17,15 @@ namespace Movies.Controllers
 
         // GET: Customers
         //============================================================================================================
-        //
+        // Action för Cutomer-lista.
+        // Parameter Sortorder:
+        // --------------------
+        //  lastname_desc: sortera fallande per efternamn sen förnamn.
+        //  firstname: sortera stigande per förnamn sen efternamn.
+        //  firstname_desc: sortera fallande per förnamn sen efternamn.
+        //  tom parameter (default): sortera stigande per efternamn sen förnamn.
         //============================================================================================================
+
         public ActionResult Index(string sortOrder)
         {
             ViewBag.LastNameSort = String.IsNullOrEmpty(sortOrder) ? "lastname_desc" : "";
@@ -50,6 +57,13 @@ namespace Movies.Controllers
 
 
         // GET: Customers/Details/5
+        //============================================================================================================
+        // Customer-details.
+        // Parameter:
+        // ----------
+        //  id: CustomerId (nyckel för kund).
+        //============================================================================================================
+
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -64,15 +78,20 @@ namespace Movies.Controllers
             return View(customer);
         }
 
+
+
         // GET: Customers/Create
+        //============================================================================================================
+        // Customer-Create: GET och POST.
+        //============================================================================================================
+
         public ActionResult Create()
         {
             return View();
         }
 
+
         // POST: Customers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "customerId,firstName,lastName")] Customer customer)
@@ -87,7 +106,15 @@ namespace Movies.Controllers
             return View(customer);
         }
 
+
+
         // GET: Customers/Edit/5
+        //============================================================================================================
+        // Customer-Edit: GET och POST.
+        // Parameter:
+        // ----------
+        //  id: CustomerId (nyckel för kund).
+        //============================================================================================================
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -102,9 +129,8 @@ namespace Movies.Controllers
             return View(customer);
         }
 
+
         // POST: Customers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "customerId,firstName,lastName")] Customer customer)
@@ -118,7 +144,16 @@ namespace Movies.Controllers
             return View(customer);
         }
 
+
+
+
         // GET: Customers/Delete/5
+        //============================================================================================================
+        // Customer-Delete: GET och POST.
+        // Parameter:
+        // ----------
+        //  id: CustomerId (nyckel för kund).
+        //============================================================================================================
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -143,6 +178,7 @@ namespace Movies.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
 
         protected override void Dispose(bool disposing)
         {
