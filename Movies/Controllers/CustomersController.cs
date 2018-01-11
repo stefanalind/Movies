@@ -12,12 +12,11 @@ namespace Movies.Controllers
 {
     public class CustomersController : Controller
     {
-        private MoviesContext db = new MoviesContext();
 
 
-        // GET: Customers
         //============================================================================================================
-        // Action för Cutomer-lista.
+        // Action för Customer-lista (administration av kunder).
+        //
         // Parameter Sortorder:
         // --------------------
         //  lastname_desc: sortera fallande per efternamn sen förnamn.
@@ -26,65 +25,74 @@ namespace Movies.Controllers
         //  tom parameter (default): sortera stigande per efternamn sen förnamn.
         //============================================================================================================
 
+        // GET: Customers
         public ActionResult Index(string sortOrder)
         {
             ViewBag.LastNameSort = String.IsNullOrEmpty(sortOrder) ? "lastname_desc" : "";
             ViewBag.FirstNameSort = String.IsNullOrEmpty(sortOrder) ? "firstname_desc" : "";
 
-            var customers = from c in db.Customers select c;
-
-            switch (sortOrder)
+            using (MoviesContext db = new MoviesContext())
             {
-                case "lastname_desc":
-                    customers = customers.OrderByDescending(c => c.lastName).ThenByDescending(c => c.firstName);
-                    break;
-                case "firstname":
-                    customers = customers.OrderBy(c => c.firstName).ThenByDescending(c => c.lastName);
-                    break;
-                case "firstname_desc":
-                    customers = customers.OrderByDescending(c => c.firstName).ThenByDescending(c => c.lastName);
-                    break;
-                default:
-                    customers = customers.OrderBy(c => c.lastName).ThenBy(c => c.firstName);
-                    break;
+                var customers = from c in db.Customers select c;
+
+                switch (sortOrder)
+                {
+                    case "lastname_desc":
+                        customers = customers.OrderByDescending(c => c.lastName).ThenByDescending(c => c.firstName);
+                        break;
+                    case "firstname":
+                        customers = customers.OrderBy(c => c.firstName).ThenByDescending(c => c.lastName);
+                        break;
+                    case "firstname_desc":
+                        customers = customers.OrderByDescending(c => c.firstName).ThenByDescending(c => c.lastName);
+                        break;
+                    default:
+                        customers = customers.OrderBy(c => c.lastName).ThenBy(c => c.firstName);
+                        break;
+                }
+
+                return View(customers.ToList());
             }
-
-            return View(customers.ToList());
-
 
         }
 
 
 
-        // GET: Customers/Details/5
         //============================================================================================================
-        // Customer-details.
+        // Customer-details (detaljer om specifik kund).
+        //
         // Parameter:
         // ----------
         //  id: CustomerId (nyckel för kund).
         //============================================================================================================
 
+        // GET: Customers/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Customer customer = db.Customers.Find(id);
-            if (customer == null)
+
+            using (MoviesContext db = new MoviesContext())
             {
-                return HttpNotFound();
+                Customer customer = db.Customers.Find(id);
+                if (customer == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(customer);
             }
-            return View(customer);
+
         }
 
 
 
-        // GET: Customers/Create
         //============================================================================================================
-        // Customer-Create: GET och POST.
+        // Customer-Create: Lägg till ny kund.
         //============================================================================================================
 
+        // GET: Customers/Create
         public ActionResult Create()
         {
             return View();
@@ -98,9 +106,12 @@ namespace Movies.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Customers.Add(customer);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                using (MoviesContext db = new MoviesContext())
+                {
+                    db.Customers.Add(customer);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
 
             return View(customer);
@@ -108,25 +119,33 @@ namespace Movies.Controllers
 
 
 
-        // GET: Customers/Edit/5
         //============================================================================================================
-        // Customer-Edit: GET och POST.
+        // Customer-Edit: Ändra på befintlig kund.
+        //
         // Parameter:
         // ----------
         //  id: CustomerId (nyckel för kund).
         //============================================================================================================
+
+        // GET: Customers/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Customer customer = db.Customers.Find(id);
-            if (customer == null)
+
+            using (MoviesContext db = new MoviesContext())
             {
-                return HttpNotFound();
+                Customer customer = db.Customers.Find(id);
+                if (customer == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return View(customer);
             }
-            return View(customer);
+
         }
 
 
@@ -137,35 +156,48 @@ namespace Movies.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(customer).State = EntityState.Modified;
-                db.SaveChanges();
+                using (MoviesContext db = new MoviesContext())
+                {
+                    db.Entry(customer).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+
                 return RedirectToAction("Index");
+
             }
+
             return View(customer);
+
         }
 
 
 
-
-        // GET: Customers/Delete/5
         //============================================================================================================
-        // Customer-Delete: GET och POST.
+        // Customer-Delete: Ta bort kund.
+        //
         // Parameter:
         // ----------
         //  id: CustomerId (nyckel för kund).
         //============================================================================================================
+
+        // GET: Customers/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Customer customer = db.Customers.Find(id);
-            if (customer == null)
+
+            using (MoviesContext db = new MoviesContext())
             {
-                return HttpNotFound();
+                Customer customer = db.Customers.Find(id);
+                if (customer == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return View(customer);
             }
-            return View(customer);
         }
 
         // POST: Customers/Delete/5
@@ -173,20 +205,16 @@ namespace Movies.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Customer customer = db.Customers.Find(id);
-            db.Customers.Remove(customer);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            using (MoviesContext db = new MoviesContext())
             {
-                db.Dispose();
+                Customer customer = db.Customers.Find(id);
+                db.Customers.Remove(customer);
+                db.SaveChanges();
             }
-            base.Dispose(disposing);
+
+            return RedirectToAction("Index");
+
         }
+
     }
 }

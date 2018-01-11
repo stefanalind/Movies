@@ -6,6 +6,10 @@ using System.Web;
 
 namespace Movies.Models
 {
+    //====================================================================================================================
+    // Modell för CustomerMovies-view. Sida där man hyr/återlämnar filmer för kund.
+    //====================================================================================================================
+
     public class CustomerMoviesViewModel
     {
         public Customer customer { get; set; }
